@@ -136,6 +136,34 @@
       for (var i = n - 1; i >= 0; i--) out.push(C.iso(new Date(now.getFullYear(), now.getMonth() - i, 1)).slice(0, 7));
       return out;
     },
+    /** Invoiced money split three ways: collected, still to come in on time, and overdue. */
+    statusTotals: function () {
+      var t = { collected: 0, waiting: 0, overdue: 0 };
+      D.list('invoices').forEach(function (inv) {
+        t.collected += D.invoicePaid(inv);
+        var due = D.invoiceDue(inv);
+        if (due) { if (D.isOverdue(inv)) t.overdue += due; else t.waiting += due; }
+      });
+      t.total = t.collected + t.waiting + t.overdue;
+      return t;
+    },
+    /** Spending by category across the last n months, largest first. */
+    expenseByCategory: function (n) {
+      var keys = {}, map = {};
+      D.lastMonths(n).forEach(function (k) { keys[k] = true; });
+      D.list('expenses').forEach(function (e) { if (keys[C.monthKey(e.date)]) map[e.category] = (map[e.category] || 0) + (e.amount || 0); });
+      return Object.keys(map).map(function (k) { return { label: k, value: map[k] }; }).sort(function (a, b) { return b.value - a.value; });
+    },
+    /** Jobs (not cancelled) in each of the next n weeks, starting with the current week (Monday). */
+    jobsPerWeek: function (n) {
+      var now = C.today(), mon = C.addDays(now, -((now.getDay() + 6) % 7)), out = [];
+      for (var i = 0; i < n; i++) {
+        var from = C.iso(C.addDays(mon, 7 * i)), to = C.iso(C.addDays(mon, 7 * i + 6)), count = 0, value = 0;
+        D.list('jobs').forEach(function (j) { if (j.status !== 'cancelled' && j.date >= from && j.date <= to) { count += 1; value += j.price || 0; } });
+        out.push({ from: from, label: C.fmtDate(C.parseISO(from)).replace(/,? \d{4}$/, ''), count: count, value: value });
+      }
+      return out;
+    },
     monthSummary: function (key) {
       var inc = D.monthIncome(key), exp = D.monthExpenses(key);
       return { key: key, income: inc, expenses: exp, profit: inc - exp };

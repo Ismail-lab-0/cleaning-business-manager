@@ -2,8 +2,17 @@
    tokens in 00_tokens.css — no hard-coded hex here. */
 
 input[type=date], input[type=time], input[type=text], input[type=number], select {
-  width: 100%; font: inherit; padding: 10px 12px; border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm); background: var(--color-card); color: var(--color-ink);
+  width: 100%; font: inherit; font-size: var(--text-base); line-height: 1.3; min-height: 50px; padding: 12px 16px;
+  border: 1px solid var(--color-border); border-radius: var(--radius-sm); background: var(--color-card); color: var(--color-ink);
+}
+/* Dropdowns: our own chevron with room on the right, so the text never touches the edge. */
+select {
+  -webkit-appearance: none; appearance: none; cursor: pointer; padding-right: 48px; text-overflow: ellipsis;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%23566678' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'><path d='M6 9l6 6 6-6'/></svg>");
+  background-repeat: no-repeat; background-position: right 16px center; background-size: 20px;
+}
+:root[data-theme="dark"] select {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%239fb1c2' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'><path d='M6 9l6 6 6-6'/></svg>");
 }
 .field input, .field select { width: 100%; }
 input[type=checkbox] { width: 20px; height: 20px; accent-color: var(--color-primary); flex-shrink: 0; margin: 0; }
@@ -12,16 +21,16 @@ button.small { padding: 6px 10px; font-size: var(--text-sm); }
 .caption { color: var(--color-muted); font-size: var(--text-xs); }
 .nowrap { white-space: nowrap; }
 .neg { color: var(--color-danger); font-weight: 600; }
-table.table input.cell-input { width: 7.5em; padding: 6px 8px; }
+table.table input.cell-input { width: 7.5em; min-height: 40px; padding: 8px 10px; }
 table.table input.cell-input.invalid { border-color: var(--color-danger); }
 tr.row-over td { background: var(--color-error-bg); }
 tr.total-row td { font-weight: 700; border-top: 2px solid var(--color-border); }
-table.table td select { width: auto; padding: 6px 8px; }
+table.table td select { width: auto; min-height: 40px; padding: 8px 40px 8px 12px; background-position: right 12px center; }
 
 .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: var(--space-3); margin-bottom: var(--space-4); }
 .stat { background: var(--color-card); border-radius: var(--radius-md); padding: var(--space-3) var(--space-4); box-shadow: var(--shadow-sm); display: flex; flex-direction: column; gap: 2px; min-width: 0; }
 .stat-label { font-size: var(--text-xs); color: var(--color-muted); text-transform: uppercase; letter-spacing: .04em; }
-.stat-value { font-family: var(--font-heading); font-size: var(--text-xl); color: var(--color-primary); overflow-wrap: anywhere; }
+.stat-value { font-family: var(--font-heading); font-size: 1.9rem; line-height: 1.1; color: var(--color-primary); overflow-wrap: anywhere; }
 :root[data-theme="dark"] .stat-value { color: var(--color-accent); }
 .stat.bad .stat-value { color: var(--color-danger); }
 .stat-sub { font-size: var(--text-xs); color: var(--color-muted); overflow-wrap: anywhere; }
@@ -137,3 +146,23 @@ svg.chart { width: 100%; height: auto; max-height: 260px; display: block; }
 .main > .card + .card { margin-top: var(--space-4); }
 /* On phones and narrow windows the list comes first and the add form below it. */
 @media (max-width: 980px) { .split.listfirst > .main { order: -1; } }
+
+/* ---------- Big numbers and charts ---------- */
+.stat-grid.hero { grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); }
+.stat.big { padding: var(--space-4) var(--space-5); }
+.stat.big .stat-value { font-size: 2.9rem; }
+.stat.big .stat-label { font-size: var(--text-sm); }
+.donut-wrap { display: flex; align-items: center; gap: var(--space-5); flex-wrap: wrap; }
+svg.donut { width: 190px; height: 190px; flex-shrink: 0; }
+svg.donut .center-num { font-family: var(--font-heading); font-size: 9px; font-weight: 700; fill: var(--color-ink); }
+svg.donut .center-lab { font-size: 3.6px; fill: var(--color-muted); }
+.donut-legend { list-style: none; margin: 0; padding: 0; flex: 1; min-width: 160px; }
+.donut-legend li { display: flex; justify-content: space-between; gap: var(--space-3); padding: 6px 0; border-bottom: 1px solid var(--color-border); font-size: var(--text-sm); }
+.donut-legend li:last-child { border-bottom: 0; }
+.donut-legend .swatch { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 8px; vertical-align: -1px; }
+.hbars { list-style: none; margin: 0; padding: 0; }
+.hbars li { display: block; padding: var(--space-2) 0; }
+.hbars .hb-head { display: flex; justify-content: space-between; gap: var(--space-2); font-size: var(--text-sm); margin-bottom: 4px; }
+.hbars .hb-track { height: 12px; background: var(--color-border); border-radius: var(--radius-full); overflow: hidden; }
+.hbars .hb-fill { display: block; height: 100%; background: var(--color-accent); border-radius: var(--radius-full); }
+.chart-note { color: var(--color-muted); font-size: var(--text-xs); margin: var(--space-2) 0 0; }

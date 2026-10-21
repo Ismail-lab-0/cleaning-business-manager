@@ -26,8 +26,8 @@
       root.appendChild(h('h1', { text: 'Invoices' }));
       root.appendChild(h('p', { class: 'sub', text: 'Bill a client, record each payment, and see who still owes you.' }));
       if (t.overdueCount) root.appendChild(C.banner('warning', t.overdueCount + (t.overdueCount === 1 ? ' invoice is' : ' invoices are') + ' overdue: ' + C.fmt(t.overdue) + '.'));
-      root.appendChild(h('div', { class: 'stat-grid' }, C.stat('Total owed', C.fmt(t.due), 'across all unpaid invoices', t.overdue ? 'bad' : ''), C.stat('Overdue', C.fmt(t.overdue), t.overdueCount + ' invoice(s)', t.overdue ? 'bad' : ''),
-        C.stat('Invoiced', String(invoices.length), 'invoices in total')));
+      root.appendChild(h('div', { class: 'stat-grid hero' }, C.stat('Total owed', C.fmt(t.due), 'across all unpaid invoices', 'big' + (t.overdue ? ' bad' : '')), C.stat('Overdue', C.fmt(t.overdue), t.overdueCount + ' invoice(s)', 'big' + (t.overdue ? ' bad' : '')),
+        C.stat('Invoiced', String(invoices.length), 'invoices in total', 'big')));
 
       var client = h('select', { id: 'invClient' });
       client.appendChild(h('option', { value: '', text: clients.length ? 'Choose a client' : 'Add a client first' }));

@@ -247,8 +247,17 @@ details.accordion .answer { margin-top: var(--space-2); color: var(--color-ink);
    tokens in 00_tokens.css — no hard-coded hex here. */
 
 input[type=date], input[type=time], input[type=text], input[type=number], select {
-  width: 100%; font: inherit; padding: 10px 12px; border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm); background: var(--color-card); color: var(--color-ink);
+  width: 100%; font: inherit; font-size: var(--text-base); line-height: 1.3; min-height: 50px; padding: 12px 16px;
+  border: 1px solid var(--color-border); border-radius: var(--radius-sm); background: var(--color-card); color: var(--color-ink);
+}
+/* Dropdowns: our own chevron with room on the right, so the text never touches the edge. */
+select {
+  -webkit-appearance: none; appearance: none; cursor: pointer; padding-right: 48px; text-overflow: ellipsis;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%23566678' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'><path d='M6 9l6 6 6-6'/></svg>");
+  background-repeat: no-repeat; background-position: right 16px center; background-size: 20px;
+}
+:root[data-theme="dark"] select {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%239fb1c2' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'><path d='M6 9l6 6 6-6'/></svg>");
 }
 .field input, .field select { width: 100%; }
 input[type=checkbox] { width: 20px; height: 20px; accent-color: var(--color-primary); flex-shrink: 0; margin: 0; }
@@ -257,16 +266,16 @@ button.small { padding: 6px 10px; font-size: var(--text-sm); }
 .caption { color: var(--color-muted); font-size: var(--text-xs); }
 .nowrap { white-space: nowrap; }
 .neg { color: var(--color-danger); font-weight: 600; }
-table.table input.cell-input { width: 7.5em; padding: 6px 8px; }
+table.table input.cell-input { width: 7.5em; min-height: 40px; padding: 8px 10px; }
 table.table input.cell-input.invalid { border-color: var(--color-danger); }
 tr.row-over td { background: var(--color-error-bg); }
 tr.total-row td { font-weight: 700; border-top: 2px solid var(--color-border); }
-table.table td select { width: auto; padding: 6px 8px; }
+table.table td select { width: auto; min-height: 40px; padding: 8px 40px 8px 12px; background-position: right 12px center; }
 
 .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: var(--space-3); margin-bottom: var(--space-4); }
 .stat { background: var(--color-card); border-radius: var(--radius-md); padding: var(--space-3) var(--space-4); box-shadow: var(--shadow-sm); display: flex; flex-direction: column; gap: 2px; min-width: 0; }
 .stat-label { font-size: var(--text-xs); color: var(--color-muted); text-transform: uppercase; letter-spacing: .04em; }
-.stat-value { font-family: var(--font-heading); font-size: var(--text-xl); color: var(--color-primary); overflow-wrap: anywhere; }
+.stat-value { font-family: var(--font-heading); font-size: 1.9rem; line-height: 1.1; color: var(--color-primary); overflow-wrap: anywhere; }
 :root[data-theme="dark"] .stat-value { color: var(--color-accent); }
 .stat.bad .stat-value { color: var(--color-danger); }
 .stat-sub { font-size: var(--text-xs); color: var(--color-muted); overflow-wrap: anywhere; }
@@ -382,6 +391,26 @@ svg.chart { width: 100%; height: auto; max-height: 260px; display: block; }
 .main > .card + .card { margin-top: var(--space-4); }
 /* On phones and narrow windows the list comes first and the add form below it. */
 @media (max-width: 980px) { .split.listfirst > .main { order: -1; } }
+
+/* ---------- Big numbers and charts ---------- */
+.stat-grid.hero { grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); }
+.stat.big { padding: var(--space-4) var(--space-5); }
+.stat.big .stat-value { font-size: 2.9rem; }
+.stat.big .stat-label { font-size: var(--text-sm); }
+.donut-wrap { display: flex; align-items: center; gap: var(--space-5); flex-wrap: wrap; }
+svg.donut { width: 190px; height: 190px; flex-shrink: 0; }
+svg.donut .center-num { font-family: var(--font-heading); font-size: 9px; font-weight: 700; fill: var(--color-ink); }
+svg.donut .center-lab { font-size: 3.6px; fill: var(--color-muted); }
+.donut-legend { list-style: none; margin: 0; padding: 0; flex: 1; min-width: 160px; }
+.donut-legend li { display: flex; justify-content: space-between; gap: var(--space-3); padding: 6px 0; border-bottom: 1px solid var(--color-border); font-size: var(--text-sm); }
+.donut-legend li:last-child { border-bottom: 0; }
+.donut-legend .swatch { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 8px; vertical-align: -1px; }
+.hbars { list-style: none; margin: 0; padding: 0; }
+.hbars li { display: block; padding: var(--space-2) 0; }
+.hbars .hb-head { display: flex; justify-content: space-between; gap: var(--space-2); font-size: var(--text-sm); margin-bottom: 4px; }
+.hbars .hb-track { height: 12px; background: var(--color-border); border-radius: var(--radius-full); overflow: hidden; }
+.hbars .hb-fill { display: block; height: 100%; background: var(--color-accent); border-radius: var(--radius-full); }
+.chart-note { color: var(--color-muted); font-size: var(--text-xs); margin: var(--space-2) 0 0; }
 
 </style>
 <link rel="manifest" href="manifest.json">
@@ -843,6 +872,34 @@ window.APP_DEMO_MODE = false;
       for (var i = n - 1; i >= 0; i--) out.push(C.iso(new Date(now.getFullYear(), now.getMonth() - i, 1)).slice(0, 7));
       return out;
     },
+    /** Invoiced money split three ways: collected, still to come in on time, and overdue. */
+    statusTotals: function () {
+      var t = { collected: 0, waiting: 0, overdue: 0 };
+      D.list('invoices').forEach(function (inv) {
+        t.collected += D.invoicePaid(inv);
+        var due = D.invoiceDue(inv);
+        if (due) { if (D.isOverdue(inv)) t.overdue += due; else t.waiting += due; }
+      });
+      t.total = t.collected + t.waiting + t.overdue;
+      return t;
+    },
+    /** Spending by category across the last n months, largest first. */
+    expenseByCategory: function (n) {
+      var keys = {}, map = {};
+      D.lastMonths(n).forEach(function (k) { keys[k] = true; });
+      D.list('expenses').forEach(function (e) { if (keys[C.monthKey(e.date)]) map[e.category] = (map[e.category] || 0) + (e.amount || 0); });
+      return Object.keys(map).map(function (k) { return { label: k, value: map[k] }; }).sort(function (a, b) { return b.value - a.value; });
+    },
+    /** Jobs (not cancelled) in each of the next n weeks, starting with the current week (Monday). */
+    jobsPerWeek: function (n) {
+      var now = C.today(), mon = C.addDays(now, -((now.getDay() + 6) % 7)), out = [];
+      for (var i = 0; i < n; i++) {
+        var from = C.iso(C.addDays(mon, 7 * i)), to = C.iso(C.addDays(mon, 7 * i + 6)), count = 0, value = 0;
+        D.list('jobs').forEach(function (j) { if (j.status !== 'cancelled' && j.date >= from && j.date <= to) { count += 1; value += j.price || 0; } });
+        out.push({ from: from, label: C.fmtDate(C.parseISO(from)).replace(/,? \d{4}$/, ''), count: count, value: value });
+      }
+      return out;
+    },
     monthSummary: function (key) {
       var inc = D.monthIncome(key), exp = D.monthExpenses(key);
       return { key: key, income: inc, expenses: exp, profit: inc - exp };
@@ -885,6 +942,76 @@ App.charts = {
         if (bh) el('rect', { x: cx + s[2], y: h - padB - bh, width: barW, height: bh, rx: 3, fill: s[1] });
       });
       el('text', { x: cx, y: h - 14, 'text-anchor': 'middle', 'font-size': 12, fill: 'var(--color-ink)' }, r.label);
+    });
+    return svg;
+  },
+
+  /** segments: [{label, value, color}], center: {num, label}. Returns {svg, legend} elements. */
+  donut: function (segments, center, fmt) {
+    var NS = 'http://www.w3.org/2000/svg', total = 0;
+    segments.forEach(function (s) { total += s.value; });
+    var svg = document.createElementNS(NS, 'svg');
+    svg.setAttribute('viewBox', '0 0 42 42'); svg.setAttribute('role', 'img'); svg.setAttribute('class', 'donut');
+    svg.setAttribute('aria-label', 'Invoiced money by status: ' + segments.map(function (s) { return s.label + ' ' + fmt(s.value); }).join(', '));
+    function el(tag, attrs, text) {
+      var e = document.createElementNS(NS, tag);
+      Object.keys(attrs).forEach(function (k) { e.setAttribute(k, attrs[k]); });
+      if (text != null) e.textContent = text;
+      svg.appendChild(e);
+      return e;
+    }
+    el('circle', { cx: 21, cy: 21, r: 15.9155, fill: 'none', stroke: 'var(--color-border)', 'stroke-width': 5 });
+    var offset = 25;                       // start at 12 o'clock
+    if (total > 0) segments.forEach(function (s) {
+      if (s.value <= 0) return;
+      var pct = s.value / total * 100;
+      el('circle', { cx: 21, cy: 21, r: 15.9155, fill: 'none', stroke: s.color, 'stroke-width': 5, 'stroke-dasharray': pct + ' ' + (100 - pct), 'stroke-dashoffset': offset });
+      offset -= pct;
+    });
+    el('text', { x: 21, y: 22.5, 'text-anchor': 'middle', class: 'center-num' }, center.num);
+    el('text', { x: 21, y: 27.5, 'text-anchor': 'middle', class: 'center-lab' }, center.label);
+    var ul = document.createElement('ul'); ul.className = 'donut-legend';
+    segments.forEach(function (s) {
+      var li = document.createElement('li'), l = document.createElement('span'), sw = document.createElement('span'), v = document.createElement('strong');
+      sw.className = 'swatch'; sw.style.background = s.color;
+      l.appendChild(sw); l.appendChild(document.createTextNode(s.label)); v.textContent = fmt(s.value);
+      li.appendChild(l); li.appendChild(v); ul.appendChild(li);
+    });
+    return { svg: svg, legend: ul };
+  },
+  /** rows: [{label, value}] as horizontal bars, scaled to the largest. */
+  hbars: function (rows, fmt) {
+    var max = 1, ul = document.createElement('ul'); ul.className = 'hbars';
+    rows.forEach(function (r) { max = Math.max(max, r.value); });
+    rows.forEach(function (r) {
+      var li = document.createElement('li'), head = document.createElement('div'), a = document.createElement('span'), b = document.createElement('strong');
+      head.className = 'hb-head'; a.textContent = r.label; b.textContent = fmt(r.value); head.appendChild(a); head.appendChild(b);
+      var track = document.createElement('div'), fill = document.createElement('span');
+      track.className = 'hb-track'; track.setAttribute('role', 'img'); track.setAttribute('aria-label', r.label + ': ' + fmt(r.value));
+      fill.className = 'hb-fill'; fill.style.width = Math.max(3, Math.round(r.value / max * 100)) + '%'; track.appendChild(fill);
+      li.appendChild(head); li.appendChild(track); ul.appendChild(li);
+    });
+    return ul;
+  },
+  /** rows: [{label, value}] as vertical columns; returns an <svg>. */
+  columns: function (rows, ariaLabel) {
+    var NS = 'http://www.w3.org/2000/svg', w = 560, h = 200, padB = 30, padT = 24, plotH = h - padB - padT, max = 1;
+    rows.forEach(function (r) { max = Math.max(max, r.value); });
+    var gw = w / rows.length, bw = Math.min(46, gw - 16);
+    var svg = document.createElementNS(NS, 'svg');
+    svg.setAttribute('viewBox', '0 0 ' + w + ' ' + h); svg.setAttribute('role', 'img'); svg.setAttribute('class', 'chart'); svg.setAttribute('aria-label', ariaLabel);
+    function el(tag, attrs, text) {
+      var e = document.createElementNS(NS, tag);
+      Object.keys(attrs).forEach(function (k) { e.setAttribute(k, attrs[k]); });
+      if (text != null) e.textContent = text;
+      svg.appendChild(e);
+    }
+    el('line', { x1: 0, x2: w, y1: h - padB, y2: h - padB, stroke: 'var(--color-border)', 'stroke-width': 1 });
+    rows.forEach(function (r, i) {
+      var cx = gw * i + gw / 2, bh = r.value > 0 ? Math.max(4, Math.round(r.value / max * plotH)) : 0;
+      if (bh) el('rect', { x: cx - bw / 2, y: h - padB - bh, width: bw, height: bh, rx: 4, fill: 'var(--color-accent)' });
+      el('text', { x: cx, y: h - padB - bh - 6, 'text-anchor': 'middle', 'font-size': 14, 'font-weight': 700, fill: 'var(--color-ink)' }, String(r.value));
+      el('text', { x: cx, y: h - 10, 'text-anchor': 'middle', 'font-size': 11, fill: 'var(--color-muted)' }, r.label);
     });
     return svg;
   },
@@ -947,12 +1074,14 @@ App.charts = {
         h('button', { type: 'button', id: 'goClientsBtn', class: 'ghost small', text: 'Add a client', on: { click: function () { location.hash = '#clients'; } } })));
     }
 
+    root.appendChild(h('div', { class: 'stat-grid hero' },
+      C.stat('Owed to you', C.fmt(owed.due), owed.due ? 'unpaid invoices, all clients' : 'nothing outstanding', 'big' + (owed.overdue ? ' bad' : '')),
+      C.stat('Profit this month', C.fmt(month.profit), 'income minus expenses', 'big' + (month.profit < 0 ? ' bad' : '')),
+      C.stat('Jobs today', String(todayJobs.length), todayJobs.length ? 'on your schedule' : 'nothing booked today', 'big')));
     root.appendChild(h('div', { class: 'stat-grid' },
-      C.stat('Jobs today', String(todayJobs.length), todayJobs.length ? 'on your schedule' : 'nothing booked today'),
-      C.stat('Owed to you', C.fmt(owed.due), owed.due ? 'unpaid invoices, all clients' : 'nothing outstanding', owed.overdue ? 'bad' : ''),
       C.stat('Income this month', C.fmt(month.income), 'payments received'),
       C.stat('Expenses this month', C.fmt(month.expenses)),
-      C.stat('Profit this month', C.fmt(month.profit), 'income minus expenses', month.profit < 0 ? 'bad' : '')));
+      C.stat('Overdue', C.fmt(owed.overdue), owed.overdueCount + (owed.overdueCount === 1 ? ' invoice' : ' invoices'), owed.overdue ? 'bad' : '')));
 
     var today = h('div', { class: 'card' }, h('h2', { text: 'Today' }));
     if (!todayJobs.length) today.appendChild(C.emptyState('No jobs today', 'Add jobs in the Jobs view and they appear here on the day.'));
@@ -976,6 +1105,27 @@ App.charts = {
       h('div', { class: 'legend' }, h('span', { class: 'key inc', text: 'Income' }), h('span', { class: 'key exp', text: 'Expenses' })));
     chart.appendChild(App.charts.incomeExpenses(rows, C.fmt));
     root.appendChild(chart);
+
+    var st = D.statusTotals(), pct = st.total ? Math.round(st.collected / st.total * 100) : 0;
+    var dn = App.charts.donut([
+      { label: 'Collected', value: st.collected, color: 'var(--color-success)' },
+      { label: 'Waiting to be paid', value: st.waiting, color: 'var(--color-info)' },
+      { label: 'Overdue', value: st.overdue, color: 'var(--color-danger)' }], { num: st.total ? pct + '%' : '—', label: 'collected' }, C.fmt);
+    var inv = h('div', { class: 'card' }, h('h2', { text: 'Invoices: collected vs owed' }));
+    if (!st.total) inv.appendChild(C.emptyState('No invoices yet', 'Create one from a job or the Invoices view.'));
+    else inv.appendChild(h('div', { class: 'donut-wrap' }, dn.svg, dn.legend));
+
+    var wk = D.jobsPerWeek(6), wkCard = h('div', { class: 'card' }, h('h2', { text: 'Jobs per week, next 6 weeks' }));
+    if (!wk.some(function (r) { return r.count; })) wkCard.appendChild(C.emptyState('No jobs booked', 'Booked jobs show here week by week.'));
+    else {
+      wkCard.appendChild(App.charts.columns(wk.map(function (r) { return { label: r.label, value: r.count }; }), 'Jobs per week: ' + wk.map(function (r) { return r.label + ' ' + r.count; }).join(', ')));
+      wkCard.appendChild(h('p', { class: 'chart-note', text: 'Weeks start on Monday. Booked value over these weeks: ' + C.fmt(wk.reduce(function (s, r) { return s + r.value; }, 0)) + '.' }));
+    }
+    var cats = D.expenseByCategory(6), exCard = h('div', { class: 'card' }, h('h2', { text: 'Where the money goes, last 6 months' }));
+    if (!cats.length) exCard.appendChild(C.emptyState('No expenses yet', 'Log expenses to see them by category.'));
+    else exCard.appendChild(App.charts.hbars(cats, C.fmt));
+    root.appendChild(h('div', { class: 'grid-2 top' }, inv, wkCard));
+    root.appendChild(exCard);
   }
 
   App.views.dashboard = {
@@ -1399,8 +1549,8 @@ App.charts = {
       root.appendChild(h('h1', { text: 'Invoices' }));
       root.appendChild(h('p', { class: 'sub', text: 'Bill a client, record each payment, and see who still owes you.' }));
       if (t.overdueCount) root.appendChild(C.banner('warning', t.overdueCount + (t.overdueCount === 1 ? ' invoice is' : ' invoices are') + ' overdue: ' + C.fmt(t.overdue) + '.'));
-      root.appendChild(h('div', { class: 'stat-grid' }, C.stat('Total owed', C.fmt(t.due), 'across all unpaid invoices', t.overdue ? 'bad' : ''), C.stat('Overdue', C.fmt(t.overdue), t.overdueCount + ' invoice(s)', t.overdue ? 'bad' : ''),
-        C.stat('Invoiced', String(invoices.length), 'invoices in total')));
+      root.appendChild(h('div', { class: 'stat-grid hero' }, C.stat('Total owed', C.fmt(t.due), 'across all unpaid invoices', 'big' + (t.overdue ? ' bad' : '')), C.stat('Overdue', C.fmt(t.overdue), t.overdueCount + ' invoice(s)', 'big' + (t.overdue ? ' bad' : '')),
+        C.stat('Invoiced', String(invoices.length), 'invoices in total', 'big')));
 
       var client = h('select', { id: 'invClient' });
       client.appendChild(h('option', { value: '', text: clients.length ? 'Choose a client' : 'Add a client first' }));
@@ -1490,6 +1640,13 @@ App.charts = {
       root.appendChild(h('h1', { text: 'Expenses' }));
       root.appendChild(h('p', { class: 'sub', text: 'Log what you spend. Together with the payments you record on invoices, this gives your profit each month.' }));
 
+      var nowKey = C.iso(C.today()).slice(0, 7), thisMonth = D.monthExpenses(nowKey), cats6 = D.expenseByCategory(6);
+      var sum6 = cats6.reduce(function (s, r) { return s + r.value; }, 0);
+      root.appendChild(h('div', { class: 'stat-grid hero' },
+        C.stat('Spent this month', C.fmt(thisMonth), 'expenses logged', 'big'),
+        C.stat('Last 6 months', C.fmt(sum6), 'all categories', 'big'),
+        C.stat('Biggest cost', cats6.length ? cats6[0].label : '—', cats6.length ? C.fmt(cats6[0].value) + ' in 6 months' : 'Nothing logged yet', 'big')));
+
       var date = h('input', { type: 'date', id: 'expDate', value: C.iso(C.today()) });
       var cat = h('select', { id: 'expCategory' }, D.EXPENSE_CATEGORIES.map(function (c) { return h('option', { value: c, text: c }); }));
       var desc = h('input', { type: 'text', id: 'expDesc', attrs: { maxlength: '120' } });
@@ -1507,6 +1664,10 @@ App.charts = {
         D.save('expenses', all);
         App.views.expenses.render(root);
       });
+
+      var byCat = h('div', { class: 'card' }, h('h2', { text: 'By category, last 6 months' }));
+      if (!cats6.length) byCat.appendChild(C.emptyState('No expenses yet', 'Add one on the left to see where the money goes.'));
+      else byCat.appendChild(App.charts.hbars(cats6, C.fmt));
 
       var months = h('div', { class: 'card' }, h('h2', { text: 'Month by month' }));
       var mbody = h('tbody');
@@ -1534,7 +1695,7 @@ App.charts = {
         } } }));
         list.appendChild(C.tableWrap(h('table', { class: 'table cardrows' }, h('thead', null, h('tr', null, ['Date', 'Category', 'Description', 'Amount', ''].map(function (x) { return h('th', { text: x }); }))), tbody)));
       }
-      root.appendChild(h('div', { class: 'split late' }, h('div', { class: 'side' }, form), h('div', { class: 'main' }, months, list)));
+      root.appendChild(h('div', { class: 'split late' }, h('div', { class: 'side' }, form), h('div', { class: 'main' }, byCat, months, list)));
     },
   };
   App.nav.push('expenses');

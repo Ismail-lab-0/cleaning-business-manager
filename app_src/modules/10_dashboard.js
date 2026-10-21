@@ -54,12 +54,14 @@
         h('button', { type: 'button', id: 'goClientsBtn', class: 'ghost small', text: 'Add a client', on: { click: function () { location.hash = '#clients'; } } })));
     }
 
+    root.appendChild(h('div', { class: 'stat-grid hero' },
+      C.stat('Owed to you', C.fmt(owed.due), owed.due ? 'unpaid invoices, all clients' : 'nothing outstanding', 'big' + (owed.overdue ? ' bad' : '')),
+      C.stat('Profit this month', C.fmt(month.profit), 'income minus expenses', 'big' + (month.profit < 0 ? ' bad' : '')),
+      C.stat('Jobs today', String(todayJobs.length), todayJobs.length ? 'on your schedule' : 'nothing booked today', 'big')));
     root.appendChild(h('div', { class: 'stat-grid' },
-      C.stat('Jobs today', String(todayJobs.length), todayJobs.length ? 'on your schedule' : 'nothing booked today'),
-      C.stat('Owed to you', C.fmt(owed.due), owed.due ? 'unpaid invoices, all clients' : 'nothing outstanding', owed.overdue ? 'bad' : ''),
       C.stat('Income this month', C.fmt(month.income), 'payments received'),
       C.stat('Expenses this month', C.fmt(month.expenses)),
-      C.stat('Profit this month', C.fmt(month.profit), 'income minus expenses', month.profit < 0 ? 'bad' : '')));
+      C.stat('Overdue', C.fmt(owed.overdue), owed.overdueCount + (owed.overdueCount === 1 ? ' invoice' : ' invoices'), owed.overdue ? 'bad' : '')));
 
     var today = h('div', { class: 'card' }, h('h2', { text: 'Today' }));
     if (!todayJobs.length) today.appendChild(C.emptyState('No jobs today', 'Add jobs in the Jobs view and they appear here on the day.'));
@@ -83,6 +85,27 @@
       h('div', { class: 'legend' }, h('span', { class: 'key inc', text: 'Income' }), h('span', { class: 'key exp', text: 'Expenses' })));
     chart.appendChild(App.charts.incomeExpenses(rows, C.fmt));
     root.appendChild(chart);
+
+    var st = D.statusTotals(), pct = st.total ? Math.round(st.collected / st.total * 100) : 0;
+    var dn = App.charts.donut([
+      { label: 'Collected', value: st.collected, color: 'var(--color-success)' },
+      { label: 'Waiting to be paid', value: st.waiting, color: 'var(--color-info)' },
+      { label: 'Overdue', value: st.overdue, color: 'var(--color-danger)' }], { num: st.total ? pct + '%' : '—', label: 'collected' }, C.fmt);
+    var inv = h('div', { class: 'card' }, h('h2', { text: 'Invoices: collected vs owed' }));
+    if (!st.total) inv.appendChild(C.emptyState('No invoices yet', 'Create one from a job or the Invoices view.'));
+    else inv.appendChild(h('div', { class: 'donut-wrap' }, dn.svg, dn.legend));
+
+    var wk = D.jobsPerWeek(6), wkCard = h('div', { class: 'card' }, h('h2', { text: 'Jobs per week, next 6 weeks' }));
+    if (!wk.some(function (r) { return r.count; })) wkCard.appendChild(C.emptyState('No jobs booked', 'Booked jobs show here week by week.'));
+    else {
+      wkCard.appendChild(App.charts.columns(wk.map(function (r) { return { label: r.label, value: r.count }; }), 'Jobs per week: ' + wk.map(function (r) { return r.label + ' ' + r.count; }).join(', ')));
+      wkCard.appendChild(h('p', { class: 'chart-note', text: 'Weeks start on Monday. Booked value over these weeks: ' + C.fmt(wk.reduce(function (s, r) { return s + r.value; }, 0)) + '.' }));
+    }
+    var cats = D.expenseByCategory(6), exCard = h('div', { class: 'card' }, h('h2', { text: 'Where the money goes, last 6 months' }));
+    if (!cats.length) exCard.appendChild(C.emptyState('No expenses yet', 'Log expenses to see them by category.'));
+    else exCard.appendChild(App.charts.hbars(cats, C.fmt));
+    root.appendChild(h('div', { class: 'grid-2 top' }, inv, wkCard));
+    root.appendChild(exCard);
   }
 
   App.views.dashboard = {

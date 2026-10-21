@@ -1,4 +1,4 @@
-const CACHE = 'app-shell-236876553e1f';
+const CACHE = 'app-shell-ba5522f75abd';
 const ASSETS = ['./', './index.html', './manifest.json'];
 self.addEventListener('install', (e) => {
   self.skipWaiting();
