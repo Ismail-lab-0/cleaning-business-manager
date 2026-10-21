@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>__TITLE__</title>
+<!--STYLES-->
+</head>
+<body>
+<div id="app">
+  <header id="app-header">
+    <button id="menuToggle" type="button" class="icon-btn" data-nav-toggle aria-label="Open menu" aria-expanded="false" aria-controls="view-nav">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    </button>
+    <div id="brand">
+      <svg id="brand-logo" viewBox="0 0 40 40" width="34" height="34" aria-hidden="true">
+        <rect width="40" height="40" rx="11" fill="var(--color-primary)"/>
+        <path d="M12 29h16M14 29l1.5-10h9L26 29" fill="none" stroke="#F4F8FB" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/>
+        <path d="M20 19v-8M20 11l3-2" fill="none" stroke="#A9D4EE" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="29" cy="12" r="1.6" fill="#A9D4EE"/>
+      </svg>
+      <strong id="app-title">__TITLE__</strong>
+    </div>
+    <div id="app-controls">
+      <button id="themeToggle" type="button" class="icon-btn" aria-label="Toggle dark mode" title="Light / dark">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5z"/></svg>
+      </button>
+      <button id="exportBtn" type="button" class="icon-btn" aria-label="Export backup" title="Export backup">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.5v11M7.5 10l4.5 4.5 4.5-4.5M4.5 19.5h15"/></svg>
+        <span class="label">Export</span>
+      </button>
+      <button id="importBtn" type="button" class="icon-btn" aria-label="Import backup" title="Import backup">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V4M7.5 8.5L12 4l4.5 4.5M4.5 19.5h15"/></svg>
+        <span class="label">Import</span>
+      </button>
+      <input id="importFile" type="file" accept="application/json" hidden>
+    </div>
+  </header>
+  <div id="app-body">
+    <nav id="view-nav" aria-label="Main navigation"></nav>
+    <main id="view-root" data-active-view=""></main>
+  </div>
+  <p id="demo-banner" hidden>Demo mode — some data and actions are limited. The full version is in your purchase.</p>
+</div>
+<!--SCRIPTS-->
+</body>
+</html>
